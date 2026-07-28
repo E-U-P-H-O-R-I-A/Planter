@@ -1,5 +1,4 @@
 using Data;
-using Data.Scheme.Public;
 using Services.PrivateModelProvider;
 
 namespace Services.CurrencyService

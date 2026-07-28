@@ -1,7 +1,5 @@
 using System;
 using Data;
-using Data.Scheme.Public;
-using UnityEngine.Serialization;
 
 namespace Services.CurrencyService
 {

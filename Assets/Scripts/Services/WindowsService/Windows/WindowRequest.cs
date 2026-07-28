@@ -1,5 +1,4 @@
 using Data;
-using Data.Scheme.Public;
 
 namespace Services.WindowsService.Windows
 {

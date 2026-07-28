@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Data;
-using Data.Scheme.Public;
 using Services.LogService;
 using Services.WindowsService.Animation;
 using Sirenix.OdinInspector;
