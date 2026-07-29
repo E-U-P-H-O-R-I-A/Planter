@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8453922199908626420}
   - component: {fileID: 1329447353213246731}
+  - component: {fileID: 6002043679087347785}
   - component: {fileID: 1478798912421927597}
   - component: {fileID: 5255019419169454032}
   m_Layer: 5
@@ -123,6 +124,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4499973587906626356}
   m_CullTransparentMesh: 1
+--- !u!225 &6002043679087347785
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4499973587906626356}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &1478798912421927597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Inventory.InventoryElement
   icon: {fileID: 3489160869700412543}
   amountText: {fileID: 4455048306531674406}
+  canvasGroup: {fileID: 6002043679087347785}
 --- !u!1 &8614307943559637040
 GameObject:
   m_ObjectHideFlags: 0

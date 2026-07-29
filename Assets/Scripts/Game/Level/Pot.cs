@@ -36,6 +36,8 @@ namespace Game.Level
         private PotStates currentState;
         private string id;
 
+        public bool IsEmpty => currentState == PotStates.Empty;
+
         [Inject]
         public void Construct(IPublicModelProvider publicModelProvider, IPrivateModelProvider privateModelProvider, 
             IRewardService rewardService)
@@ -66,22 +68,22 @@ namespace Game.Level
             spriteRenderer.sprite = null;
             timer.SetActive(false);
         }
-
-        [Button]
-        public void Plant(string plantID)
+        
+        public bool Plant(string plantID)
         {
-            PotPrivateScheme potScheme = GetPotScheme(id);
-
-            if (potScheme.IsPlanted)
-                return;
+              PotPrivateScheme potScheme = GetPotScheme(id);
+  
+              if (potScheme == null || potScheme.IsPlanted)
+                  return false;
 
             if (GetPlantScheme(plantID) == null)
-                return;
+                return false;
 
             potScheme.Plant(plantID);
             
             SaveModel();
             UpdateState();
+            return true;
         }
         
         public void OnPointerClick(PointerEventData eventData)

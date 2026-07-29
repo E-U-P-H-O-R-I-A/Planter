@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Data;
+using Game.Level;
 using Services.InventoryService;
 using Services.PublicModelProvider;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using VContainer;
 
 namespace Game.UI.Inventory
@@ -16,6 +18,9 @@ namespace Game.UI.Inventory
         private IPublicModelProvider publicModelProvider;
         private IInventoryService inventoryService;
         private SeedPublicModel seedModel;
+        private Camera gameplayCamera;
+        private InventoryElement draggedElement;
+        private Pot draggedPot;
 
         private readonly List<InventoryElement> elements = new();
 
@@ -29,6 +34,7 @@ namespace Game.UI.Inventory
         public void Initialize()
         {
             seedModel = publicModelProvider.GetModel<SeedPublicModel>();
+            gameplayCamera = Camera.main;
 
             inventoryService.Changed += Refresh;
 
@@ -40,7 +46,14 @@ namespace Game.UI.Inventory
             inventoryService.Changed -= Refresh;
 
             foreach (var element in elements)
-                element.Clicked -= RemoveItem;
+            {
+                element.DragStarted -= StartDrag;
+                element.Dragged -= Drag;
+                element.DragEnded -= EndDrag;
+            }
+
+            draggedElement = null;
+            draggedPot = null;
         }
         
         private void Refresh()
@@ -71,13 +84,12 @@ namespace Game.UI.Inventory
 
             var element = Instantiate(prefab, content);
             element.SetElement(item.ID, publicItem.Icon, item.Amount);
-            element.Clicked += RemoveItem;
+            element.DragStarted += StartDrag;
+            element.Dragged += Drag;
+            element.DragEnded += EndDrag;
             element.gameObject.SetActive(true);
             elements.Add(element);
         }
-
-        private void RemoveItem(string itemId) =>
-            inventoryService.TryRemove(itemId, 1);
 
         private InventoryElement FindElement(string itemId) =>
             elements.FirstOrDefault(element => element.ItemId == itemId);
@@ -89,6 +101,66 @@ namespace Game.UI.Inventory
 
             element.SetAmount(amount);
             element.gameObject.SetActive(amount > 0);
+        }
+
+        private void StartDrag(InventoryElement element, PointerEventData eventData)
+        {
+            draggedElement = element;
+            UpdateDraggedPot(eventData.position);
+        }
+
+        private void Drag(InventoryElement element, PointerEventData eventData)
+        {
+            if (element == draggedElement)
+                UpdateDraggedPot(eventData.position);
+        }
+
+        private void EndDrag(InventoryElement element, PointerEventData eventData)
+        {
+            if (element != draggedElement)
+                return;
+
+            var pot = FindPot(eventData.position);
+            var seed = GetItemPublicScheme(element.ItemId);
+
+            if (pot != null && seed != null && pot.IsEmpty)
+            {
+                if (inventoryService.TryRemove(element.ItemId, 1))
+                {
+                    if (!pot.Plant(seed.PlantID))
+                        inventoryService.Add(element.ItemId, 1);
+                }
+            }
+
+            draggedPot = null;
+            draggedElement = null;
+        }
+
+        private void UpdateDraggedPot(Vector2 screenPosition)
+        {
+            var pot = FindPot(screenPosition);
+
+            if (draggedPot == pot)
+                return;
+
+            draggedPot = pot;
+        }
+
+        private Pot FindPot(Vector2 screenPosition)
+        {
+            var camera = gameplayCamera != null ? gameplayCamera : Camera.main;
+            if (camera == null)
+                return null;
+
+            var worldPosition = camera.ScreenToWorldPoint(screenPosition);
+            foreach (var collider in Physics2D.OverlapPointAll(worldPosition))
+            {
+                var pot = collider.GetComponentInParent<Pot>();
+                if (pot != null)
+                    return pot;
+            }
+
+            return null;
         }
 
         private SeedPublicScheme GetItemPublicScheme(string itemId)
