@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Services.AssetProvider;
 using Services.CurrencyService;
 using Services.InputService;
+using Services.InventoryService;
 using Services.LogService;
 using Services.PrivateModelProvider;
 using Services.PublicModelProvider;
@@ -17,6 +18,7 @@ namespace Infrastructure.States
         private readonly IPublicModelProvider publicModelProvider;
         private readonly GameStateMachine gameStateMachine;
         private readonly ICurrencyService currencyService;
+        private readonly IInventoryService inventoryService;
         private readonly IAssetsProvider assetsProvider;
         private readonly ILoadingCurtain loadingCurtain;
         private readonly IWindowService windowService;
@@ -25,13 +27,15 @@ namespace Infrastructure.States
 
         public GameLoadingState(GameStateMachine gameStateMachine, ILogService logService, IPublicModelProvider publicModelProvider,
             IPrivateModelProvider privateModelProvider, ILoadingCurtain loadingCurtain, ICurrencyService currencyService, 
-            IWindowService windowService, IAssetsProvider assetsProvider, IInputService inputService)
+            IWindowService windowService, IAssetsProvider assetsProvider, IInputService inputService,
+            IInventoryService inventoryService)
         {
             this.inputService = inputService;
             this.privateModelProvider = privateModelProvider;
             this.publicModelProvider = publicModelProvider;
             this.gameStateMachine = gameStateMachine;
             this.currencyService = currencyService;
+            this.inventoryService = inventoryService;
             this.assetsProvider = assetsProvider;
             this.loadingCurtain = loadingCurtain;
             this.windowService = windowService;
@@ -52,7 +56,8 @@ namespace Infrastructure.States
             
             var privateDataTask = privateModelProvider.Initizele();
             await loadingCurtain.AnimatePhase(privateDataTask, 0.70f);
-            
+
+            inventoryService.Initialize();
             currencyService.Initialize();
             windowService.Initialize();
             inputService.Initialize();

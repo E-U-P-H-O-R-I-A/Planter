@@ -61,6 +61,8 @@ namespace Data
         {
             private readonly List<TScheme> schemes = new();
 
+            public IReadOnlyList<TScheme> Schemes => schemes;
+
             public override string ExportToJson()
             {
                 var dump = new SchemesDump();

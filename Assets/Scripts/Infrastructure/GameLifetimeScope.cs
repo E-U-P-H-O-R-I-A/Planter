@@ -2,6 +2,7 @@ using Infrastructure.States;
 using Services.AssetProvider;
 using Services.CurrencyService;
 using Services.InputService;
+using Services.InventoryService;
 using Services.LogService;
 using Services.PrivateModelProvider;
 using Services.PublicModelProvider;
@@ -42,6 +43,7 @@ namespace Infrastructure
             builder.Register<PrivateModelProvider>(Lifetime.Singleton).As<IPrivateModelProvider>();
             builder.Register<PublicModelProvider>(Lifetime.Singleton).As<IPublicModelProvider>();
             builder.Register<CurrencyService>(Lifetime.Singleton).As<ICurrencyService>();
+            builder.Register<InventoryService>(Lifetime.Singleton).As<IInventoryService>();
             builder.Register<AssetsProvider>(Lifetime.Singleton).As<IAssetsProvider>();
             builder.Register<SceneProvider>(Lifetime.Singleton).As<ISceneProvider>();
             builder.Register<LogService>(Lifetime.Singleton).As<ILogService>();
