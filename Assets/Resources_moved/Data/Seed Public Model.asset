@@ -14,14 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Data.SeedPublicModel
   schemes:
   - name: ChamomileSeeds
+    displayName: Chamomile Seeds
     icon: {fileID: 21300000, guid: 8cee38ae3d6c7294998887818c806365, type: 3}
     price: 5
     plantID: Chamomile
   - name: DandelionSeeds
+    displayName: Dandelion Seeds
     icon: {fileID: 21300000, guid: 0eeba5705552a9b41ae7d70db1a6d8a5, type: 3}
     price: 120
     plantID: Dandelion
   - name: RoseSeeds
+    displayName: Rose Seeds
     icon: {fileID: 21300000, guid: 210bd7c3c19cf3d44b881a68970b82e5, type: 3}
     price: 700
     plantID: Rose

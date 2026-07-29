@@ -7,6 +7,7 @@ namespace Data
     public class SeedPublicScheme : PublicScheme
     {
         [SerializeField] private string name;
+        [SerializeField] private string displayName;
         
         [SerializeField] private Sprite icon;
         
@@ -17,6 +18,7 @@ namespace Data
 
         public int Price => price;
         public string PlantID => plantID;
+        public string Name => displayName;
         
         public Sprite Icon => icon;
     }

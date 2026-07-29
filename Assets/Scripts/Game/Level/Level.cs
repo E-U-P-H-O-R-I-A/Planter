@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using Game.UI.Inventory;
+using Game.UI.Shop;
+using Services.WindowsService;
 using UnityEngine;
+using VContainer;
 
 namespace Game.Level
 {
     public class Level : MonoBehaviour
     {
         [SerializeField] private InventoryPanel inventory;
+        [SerializeField] private ShopButton shopButton;
         [Space]
         [SerializeField] private List<Pot> pots;
-
+        
         public void Initialize()
         {
             InitializeUI();
@@ -25,11 +29,13 @@ namespace Game.Level
         private void ReleaseUI()
         {
             inventory.Release();
+            shopButton.Release();
         }
 
         private void InitializeUI()
         {
             inventory.Initialize();
+            shopButton.Initialize();
         }
 
         private void ReleasePots()
