@@ -21,6 +21,7 @@ namespace Services.LogService
         Infrastructure = 6,
         Windows = 7,
         LevelEditor = 8,
+        Game = 9,
     }
     
     public static class LogSettings

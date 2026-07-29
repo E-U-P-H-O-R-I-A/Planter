@@ -2,6 +2,7 @@ using CodeBase.Infrastructure.AssetManagement;
 using Cysharp.Threading.Tasks;
 using Data;
 using Game;
+using Game.Level;
 using Game.UI.Inventory;
 using Services.InventoryService;
 using Services.LogService;
@@ -17,19 +18,14 @@ namespace Infrastructure.States
     public class GameplayState : IState
     {
         private readonly ILoadingCurtain loadingCurtain;
-        private readonly IInventoryService inventoryService;
-        private readonly IPublicModelProvider publicModelProvider;
         private readonly ISceneProvider sceneProvider;
         private readonly ILogService logService;
-        
-        private InventoryPanel inventoryPanel;
 
-        public GameplayState(ILogService logService, ISceneProvider sceneProvider, ILoadingCurtain loadingCurtain,
-            IInventoryService inventoryService, IPublicModelProvider publicModelProvider)
+        private Level level;
+
+        public GameplayState(ILogService logService, ISceneProvider sceneProvider, ILoadingCurtain loadingCurtain)
         {
             this.loadingCurtain = loadingCurtain;
-            this.inventoryService = inventoryService;
-            this.publicModelProvider = publicModelProvider;
             this.sceneProvider = sceneProvider;
             this.logService = logService;
         }
@@ -43,9 +39,8 @@ namespace Infrastructure.States
             
             Resolve();
             
-            AddStartingSeeds();
-            inventoryPanel.Initialize();
-            
+            level.Initialize();
+
             await loadingCurtain.Finish();
 
             loadingCurtain.Hide();
@@ -53,7 +48,7 @@ namespace Infrastructure.States
         
         public async UniTask Exit()
         {
-            inventoryPanel.Release();
+            level.Release();
             
             logService.Log("GamePlayState Exit", LogCategory.Infrastructure);
         }
@@ -62,15 +57,7 @@ namespace Infrastructure.States
         {
             var gameplayScope = LifetimeScope.Find<GameplayLifeTimeScope>();
             
-            inventoryPanel = gameplayScope.Container.Resolve<InventoryPanel>();
-        }
-
-        private void AddStartingSeeds()
-        {
-            var seedModel = publicModelProvider.GetModel<SeedPublicModel>();
-
-            foreach (var seed in seedModel.Schemes)
-                inventoryService.Add(seed.ID, 1);
+            level = gameplayScope.Container.Resolve<Level>();
         }
     }
 }

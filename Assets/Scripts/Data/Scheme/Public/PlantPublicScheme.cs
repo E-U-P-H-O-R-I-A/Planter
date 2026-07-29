@@ -1,4 +1,5 @@
 using System;
+using Services.RewardService;
 using UnityEngine;
 
 namespace Data
@@ -10,16 +11,16 @@ namespace Data
         
         [SerializeField] private Sprite imagePlant;
         [SerializeField] private Sprite imageSprout;
-        
-        [SerializeField] private int costSell;
+
         [SerializeField] private float durationGrow;
-        
+        [SerializeField] private RewardConfig sellReward;
+
         public override string ID => name;
 
-        public int CostSell => costSell;
         public float DurationGrow => durationGrow;
-        
+
         public Sprite ImagePlant => imagePlant;
         public Sprite ImageSprout => imageSprout;
+        public RewardConfig SellReward => sellReward;
     }
 }
