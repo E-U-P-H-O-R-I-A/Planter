@@ -21,7 +21,7 @@ namespace Game.UI.Shop
         private ICurrencyService currencyService;
         private SeedPublicScheme seed;
         
-        public string SeedId => seed.ID;
+        public string SeedId => seed?.ID;
 
         public void Initialize(SeedPublicScheme seed, IInventoryService inventoryService, ICurrencyService currencyService)
         {
@@ -39,7 +39,7 @@ namespace Game.UI.Shop
             title.text = seed.Name;
             price.text = seed.Price.ToString();
 
-            UpdatePurchaseButton();
+            RefreshPurchaseButton();
         }
 
         private void Purchase()
@@ -50,11 +50,14 @@ namespace Game.UI.Shop
             if (currencyService.DecreaseCurrency(GetPriceTransaction()))
                 inventoryService.Add(seed.ID, 1);
 
-            UpdatePurchaseButton();
+            RefreshPurchaseButton();
         }
 
-        private void UpdatePurchaseButton()
+        public void RefreshPurchaseButton()
         {
+            if (seed == null || currencyService == null || purchaseButton == null)
+                return;
+
             bool canPurchase = currencyService.IsEnoughCurrency(GetPriceTransaction());
 
             purchaseButton.interactable = canPurchase;

@@ -44,6 +44,36 @@ namespace Game.UI.Shop
             return UniTask.CompletedTask;
         }
 
+        protected override UniTask OnAfterOpened(BaseWindowParams payload)
+        {
+            currencyService.Changed -= OnCurrencyChanged;
+            currencyService.Changed += OnCurrencyChanged;
+            RefreshPurchaseButtons();
+
+            return UniTask.CompletedTask;
+        }
+
+        protected override UniTask OnAfterClosed()
+        {
+            currencyService.Changed -= OnCurrencyChanged;
+            return UniTask.CompletedTask;
+        }
+
+        private void OnCurrencyChanged(CurrencyType type, int amount)
+        {
+            if (type == CurrencyType.Soft)
+                RefreshPurchaseButtons();
+        }
+
+        private void RefreshPurchaseButtons()
+        {
+            if (content == null)
+                return;
+
+            foreach (ShopElement element in content.GetComponentsInChildren<ShopElement>())
+                element.RefreshPurchaseButton();
+        }
+
         private void RebuildContent()
         {
             if (content == null)
@@ -125,6 +155,12 @@ namespace Game.UI.Shop
             }
 
             return Instantiate(closeElementPrefab, content);
+        }
+
+        private void OnDestroy()
+        {
+            if (currencyService != null)
+                currencyService.Changed -= OnCurrencyChanged;
         }
     }
 }
