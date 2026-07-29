@@ -1,3 +1,4 @@
+using System;
 using Data;
 using Services.PrivateModelProvider;
 
@@ -8,6 +9,8 @@ namespace Services.CurrencyService
         private readonly IPrivateModelProvider privateModelProvider;
         
         private CurrencyPrivateModel currencyPrivateModel;
+
+        public event Action<CurrencyType, int> Changed;
 
         public CurrencyService(IPrivateModelProvider privateModelProvider)
         {
@@ -27,6 +30,7 @@ namespace Services.CurrencyService
         {
             GetScheme(transaction.type).IncreaseCurrency(transaction.amount);
             Save();
+            NotifyChanged(transaction.type);
         }
 
         public bool DecreaseCurrency(CurrencyTransaction transaction)
@@ -36,12 +40,16 @@ namespace Services.CurrencyService
             
             GetScheme(transaction.type).DecreaseCurrency(transaction.amount);
             Save();
+            NotifyChanged(transaction.type);
 
             return true;
         }
 
         private void Save() => 
             privateModelProvider.SaveModel<CurrencyPrivateModel>();
+
+        private void NotifyChanged(CurrencyType currencyType) =>
+            Changed?.Invoke(currencyType, GetAmountCurrency(currencyType));
 
         private CurrencyPrivateScheme GetScheme(CurrencyType currencyType) => 
             currencyPrivateModel.GetScheme(currencyType.ToString());
