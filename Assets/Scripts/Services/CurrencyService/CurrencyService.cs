@@ -1,24 +1,39 @@
 using System;
 using Data;
 using Services.PrivateModelProvider;
+using Services.PublicModelProvider;
 
 namespace Services.CurrencyService
 {
     public class CurrencyService : ICurrencyService
     {
         private readonly IPrivateModelProvider privateModelProvider;
+        private readonly IPublicModelProvider publicModelProvider;
         
         private CurrencyPrivateModel currencyPrivateModel;
 
         public event Action<CurrencyType, int> Changed;
 
-        public CurrencyService(IPrivateModelProvider privateModelProvider)
+        public CurrencyService(IPrivateModelProvider privateModelProvider, IPublicModelProvider publicModelProvider)
         {
             this.privateModelProvider = privateModelProvider;
+            this.publicModelProvider = publicModelProvider;
         }
 
-        public void Initialize() => 
+        public void Initialize()
+        {
             currencyPrivateModel = privateModelProvider.GetModel<CurrencyPrivateModel>();
+
+            CurrencyPublicModel publicModel = publicModelProvider.GetModel<CurrencyPublicModel>();
+            if (publicModel?.Schemes == null)
+                return;
+
+            foreach (CurrencyPublicScheme scheme in publicModel.Schemes)
+            {
+                if (scheme != null)
+                    currencyPrivateModel.SetStartValue(scheme.Type, scheme.StartValue);
+            }
+        }
 
         public int GetAmountCurrency(CurrencyType currencyType) => 
             GetScheme(currencyType).Value;
