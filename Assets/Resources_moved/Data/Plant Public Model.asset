@@ -25,18 +25,9 @@ MonoBehaviour:
   - name: Dandelion
     imagePlant: {fileID: 21300000, guid: 3f3d379131df1c44cafe5771fbd3e260, type: 3}
     imageSprout: {fileID: 21300000, guid: b86339a5533037a4589b9ba5e5139c1b, type: 3}
-    durationGrow: 60
+    durationGrow: 30
     sellReward:
       type: 0
       currencyTransaction:
         type: 0
         amount: 150
-  - name: Rose
-    imagePlant: {fileID: 21300000, guid: 58f3e4664e73ef74c89e5029244eb2ed, type: 3}
-    imageSprout: {fileID: 21300000, guid: b86339a5533037a4589b9ba5e5139c1b, type: 3}
-    durationGrow: 300
-    sellReward:
-      type: 0
-      currencyTransaction:
-        type: 0
-        amount: 900

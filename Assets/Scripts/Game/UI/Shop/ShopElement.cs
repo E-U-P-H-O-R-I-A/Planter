@@ -1,3 +1,4 @@
+using System;
 using Data;
 using Services.CurrencyService;
 using Services.InventoryService;
@@ -12,6 +13,7 @@ namespace Game.UI.Shop
         [SerializeField] private Image icon;
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text price;
+        [SerializeField] private TMP_Text growthTime;
         [Space]
         [SerializeField] private Button purchaseButton;
         [SerializeField] private Sprite availableButtonSprite;
@@ -23,7 +25,8 @@ namespace Game.UI.Shop
         
         public string SeedId => seed?.ID;
 
-        public void Initialize(SeedPublicScheme seed, IInventoryService inventoryService, ICurrencyService currencyService)
+        public void Initialize(SeedPublicScheme seed, PlantPublicScheme plant,
+            IInventoryService inventoryService, ICurrencyService currencyService)
         {
             if (seed == null)
                 return;
@@ -38,8 +41,28 @@ namespace Game.UI.Shop
             icon.sprite = seed.Icon;
             title.text = seed.Name;
             price.text = seed.Price.ToString();
+            if (growthTime != null)
+                growthTime.text = plant == null ? "—" : FormatGrowthTime(plant.DurationGrow);
 
             RefreshPurchaseButton();
+        }
+
+        private static string FormatGrowthTime(float durationSeconds)
+        {
+            int totalSeconds = Mathf.Max(0, Mathf.CeilToInt(durationSeconds));
+            TimeSpan duration = TimeSpan.FromSeconds(totalSeconds);
+
+            if (duration.TotalHours >= 1)
+                return duration.Minutes > 0
+                    ? $"{(int)duration.TotalHours}h {duration.Minutes}min"
+                    : $"{(int)duration.TotalHours}h";
+
+            if (duration.TotalMinutes >= 1)
+                return duration.Seconds > 0
+                    ? $"{(int)duration.TotalMinutes}min {duration.Seconds}s"
+                    : $"{(int)duration.TotalMinutes}min";
+
+            return $"{duration.Seconds}s";
         }
 
         private void Purchase()

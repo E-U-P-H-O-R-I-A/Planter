@@ -148,13 +148,6 @@ namespace Game.Level
                 return;
             }
 
-            if (potScheme.PlantedTime == DateTime.MinValue)
-            {
-                // Migrate old records that did not contain a serializable planting time.
-                potScheme.Plant(potScheme.PlantID);
-                SaveModel();
-            }
-
             SetSproutState();
         }
 

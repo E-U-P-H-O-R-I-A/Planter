@@ -15,7 +15,7 @@ using VContainer.Unity;
 
 namespace Infrastructure.States
 {
-    public class GameplayState : IState
+    public class  GameplayState : IState
     {
         private readonly ILoadingCurtain loadingCurtain;
         private readonly ISceneProvider sceneProvider;

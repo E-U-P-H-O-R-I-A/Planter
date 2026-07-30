@@ -22,6 +22,7 @@ namespace Game.UI.Shop
         private IInventoryService inventoryService;
         private ICurrencyService currencyService;
         private SeedPublicModel seedModel;
+        private PlantPublicModel plantModel;
 
         public override WindowType Type => WindowType.Shop;
 
@@ -38,6 +39,9 @@ namespace Game.UI.Shop
         {
             if (seedModel == null && publicModelProvider != null)
                 seedModel = publicModelProvider.GetModel<SeedPublicModel>();
+
+            if (plantModel == null && publicModelProvider != null)
+                plantModel = publicModelProvider.GetModel<PlantPublicModel>();
 
             RebuildContent();
             
@@ -97,7 +101,8 @@ namespace Game.UI.Shop
                     if (element == null)
                         break;
 
-                    element.Initialize(seed, inventoryService, currencyService);
+                    PlantPublicScheme plant = plantModel?.GetScheme(seed.PlantID);
+                    element.Initialize(seed, plant, inventoryService, currencyService);
                     element.gameObject.SetActive(true);
                     element.transform.SetSiblingIndex(shopElementIndex++);
                 }

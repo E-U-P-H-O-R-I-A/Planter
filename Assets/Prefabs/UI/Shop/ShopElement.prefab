@@ -403,6 +403,7 @@ MonoBehaviour:
   icon: {fileID: 1735676889362503457}
   title: {fileID: 9213387096007597345}
   price: {fileID: 2815114046082594095}
+  growthTime: {fileID: 8825947588245641803}
   purchaseButton: {fileID: 900400000000000001}
   availableButtonSprite: {fileID: 21300000, guid: f7b573ef9b81d754481ceba37af5cf48, type: 3}
   unavailableButtonSprite: {fileID: 21300000, guid: 05d1520e0f696174a9b601e99157024c, type: 3}
